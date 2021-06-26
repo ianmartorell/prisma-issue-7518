@@ -1,0 +1,30 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table Product {
+  id String [pk]
+  updates ProductUpdate [not null]
+  latestUpdateId String
+  latestUpdate ProductUpdate
+}
+
+Table ProductUpdate {
+  id String [pk]
+  productId String [not null]
+  product Product [not null]
+  products Product [not null]
+  orderItems OrderItem [not null]
+}
+
+Table OrderItem {
+  id String [pk]
+  productUpdateId String [not null]
+  productUpdate ProductUpdate [not null]
+}
+
+Ref: Product.latestUpdateId - ProductUpdate.id
+
+Ref: ProductUpdate.productId > Product.id
+
+Ref: OrderItem.productUpdateId > ProductUpdate.id

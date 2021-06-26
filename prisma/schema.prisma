@@ -1,0 +1,33 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator dbml {
+  provider = "prisma-dbml-generator"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Product {
+  id             String          @id @default(uuid())
+  updates        ProductUpdate[] @relation(name: "ProductUpdates")
+  latestUpdateId String?
+  latestUpdate   ProductUpdate?  @relation(name: "LatestProductUpdate", fields: [latestUpdateId], references: [id])
+}
+
+model ProductUpdate {
+  id         String      @id @default(uuid())
+  productId  String
+  product    Product     @relation(name: "ProductUpdates", fields: [productId], references: [id])
+  products   Product[]   @relation(name: "LatestProductUpdate")
+  orderItems OrderItem[]
+}
+
+model OrderItem {
+  id              String        @id @default(uuid())
+  productUpdateId String
+  productUpdate   ProductUpdate @relation(fields: [productUpdateId], references: [id])
+}
